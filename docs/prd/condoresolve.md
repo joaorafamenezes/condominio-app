@@ -16,7 +16,7 @@ Há duas portas de entrada:
 
 Uma ocorrência nasce **Aberta**, com título, descrição, categoria, local e, se a pessoa quiser, uma foto. Depois de criada, o texto, o local e a foto permanecem como foram enviados. O que muda é o status, e só a equipe muda. Quando o status chega em **Resolvido** ou **Cancelado**, a ocorrência encerra: ninguém comenta mais e ninguém reabre.
 
-A aparência segue a identidade visual já definida para o CondoResolve, inclusive a identificação visual dos cinco status.
+A aparência e a estrutura das telas seguem a seção 15. A fonte visual é `docs/DESIGN.md`. O layout de referência é o painel do morador: cabeçalho, filtros, cards de ocorrência e paginação.
 
 ## 2. Problema que resolve
 
@@ -79,6 +79,7 @@ Entregar o primeiro uso real do CondoResolve, para um único condomínio:
 - Tela para criar, editar ou apagar categorias.
 - Mais de uma foto, foto no comentário, ou outros anexos.
 - Busca por texto, relatórios, indicadores e exportação.
+- Blocos que aparecem na imagem de referência e não fazem parte deste recorte: faixa de números no topo da lista, filtro de local, troca de colunas, número de protocolo, mural de avisos, portaria, interfone, WhatsApp e texto de link mágico. A seção 15 diz o que dessa imagem vale.
 - Reservas de área comum, visitantes, encomendas, assembleias e boletos.
 - Aplicativo móvel nativo. O site precisa ser utilizável no celular, sem virar um app de loja.
 - A mesma pessoa ser, ao mesmo tempo, morador e funcionário.
@@ -154,7 +155,7 @@ Entregar o primeiro uso real do CondoResolve, para um único condomínio:
 
 - Next.js, TypeScript e Tailwind, já presentes no projeto.
 - Supabase para os dados, para o login com senha da equipe e para guardar a foto.
-- Interface no padrão visual já definido para o CondoResolve.
+- Interface conforme a seção 15, com `docs/DESIGN.md` como fonte de cor, tipografia, espaçamento, status, botões, campos e cards.
 - Formulários com validação no envio, no padrão de formulário já adotado pelo projeto.
 
 Nada além disso entra neste recorte. Não há serviço de e-mail, fila, aplicativo nativo nem painel de indicadores.
@@ -213,9 +214,9 @@ Specs:
 - **Fase:** Fase 1 — Acesso da equipe
 - **Objetivo (o quê):** O site abre com duas portas, e um funcionário ativo entra no dashboard com e-mail e senha, permanece identificado e consegue sair.
 - **Intenção (por quê):** Sem essa porta, não existe quem cadastre moradores nem quem opere as ocorrências. O funcionário inicial existe para o primeiro acesso não depender de uma tela de cadastro público.
-- **Contexto:** Não há produto anterior. Esta spec cria a página inicial e a área autenticada da equipe. A identidade visual do CondoResolve já está definida e deve ser respeitada. As áreas Moradores, Equipe e Ocorrências ganham conteúdo nas specs 03, 04 e 06.
+- **Contexto:** Não há produto anterior. Esta spec cria a página inicial e a área autenticada da equipe. A casca visual segue a seção 15 e `docs/DESIGN.md`: marca CondoResolve, cabeçalho, canvas claro e cartão de login. As áreas Moradores, Equipe e Ocorrências ganham conteúdo nas specs 03, 04 e 06.
 - **Atores:** Funcionário ativo. Visitante ainda não identificado, que só escolhe a porta.
-- **Descrição do comportamento:** Ao abrir o site, a pessoa vê duas escolhas claras: entrar como morador ou entrar como equipe. A porta do morador, até a Spec 02, leva a uma espera explícita de que a entrada do morador ainda será habilitada, sem pedir senha e sem fingir que um e-mail qualquer entra. A porta da equipe pede e-mail e senha. Se os dados forem de um funcionário ativo, o sistema abre o dashboard e mantém a pessoa identificada até ela sair. O dashboard mostra o nome de quem entrou, a ação Sair, e três destinos: Ocorrências, Moradores e Equipe. Cada destino, nesta spec, mostra só o nome da área, sem cadastro e sem lista. Se a pessoa já está logada e escolhe de novo a porta da equipe, vai direto ao dashboard. Sair encerra a identificação e devolve à página inicial. A área da equipe recusa quem não está identificado e mostra o formulário de e-mail e senha.
+- **Descrição do comportamento:** Ao abrir o site, a pessoa vê duas escolhas claras, no mesmo visual do restante do produto: entrar como morador ou entrar como equipe. A porta do morador, até a Spec 02, leva a uma espera explícita de que a entrada do morador ainda será habilitada, sem pedir senha e sem fingir que um e-mail qualquer entra. A porta da equipe abre um cartão centrado no canvas, com e-mail, senha e o botão primário. Se os dados forem de um funcionário ativo, o sistema abre o dashboard e mantém a pessoa identificada até ela sair. O cabeçalho do dashboard traz a marca CondoResolve, os destinos Ocorrências, Moradores e Equipe, o nome de quem entrou e a ação Sair. Cada destino, nesta spec, mostra só o nome da área, sem cadastro e sem lista. Se a pessoa já está logada e escolhe de novo a porta da equipe, vai direto ao dashboard. Sair encerra a identificação e devolve à página inicial. A área da equipe recusa quem não está identificado e mostra o formulário de e-mail e senha. No celular, o cabeçalho se condensa e os destinos continuam alcançáveis.
 - **Entradas e saídas:** Entram o e-mail e a senha digitados. Sai a sessão do funcionário ativo, o nome dele visível no dashboard, ou uma mensagem de erro. Sair produz o fim da sessão.
 - **Dados/entidades envolvidos (conceitual):** Funcionário: nome completo, e-mail, senha, situação (ativo ou desativado). Neste momento existe só o funcionário inicial, ativo, com nome, e-mail e senha definidos na implantação. A senha não é exibida em lugar nenhum depois de definida.
 - **Estados e transições:** Visitante sem sessão → funcionário identificado, quando e-mail e senha batem com um funcionário ativo. Funcionário identificado → visitante, quando escolhe Sair. Conta desativada não chega a identificada.
@@ -251,7 +252,7 @@ Specs:
 - **Fase:** Fase 3 — Portal do morador
 - **Objetivo (o quê):** Um morador ativo informa o e-mail cadastrado e entra no portal, sem senha, vendo quem ele é até sair.
 - **Intenção (por quê):** O morador precisa chegar na lista e na abertura de ocorrência sem receber senha e sem passar pelo dashboard. O e-mail é a chave combinada com a equipe na Spec 03.
-- **Contexto:** A página inicial e a porta do morador existem desde a Spec 01. O cadastro do morador existe desde a Spec 03. Esta spec substitui a espera da porta do morador pelo formulário de e-mail e pela área identificada. A lista e a nova ocorrência entram nas specs 05 e 06.
+- **Contexto:** A página inicial e a porta do morador existem desde a Spec 01. O cadastro do morador existe desde a Spec 03. Esta spec substitui a espera da porta do morador pelo formulário de e-mail e pela área identificada. O formulário é um cartão centrado, só com e-mail, no visual da seção 15. A lista e a nova ocorrência entram nas specs 05 e 06. O cabeçalho do portal, quando a pessoa entra, mostra a marca, os destinos Ocorrências e Nova Ocorrência, o nome, a torre/apartamento e Sair.
 - **Atores:** Morador ativo. Morador desativado e visitante com e-mail desconhecido, que não entram.
 - **Descrição do comportamento:** Na porta do morador, o sistema pede só o e-mail. Se esse e-mail for de um morador ativo, abre o portal e mostra o nome completo e a torre/apartamento de quem entrou, com a ação Sair sempre visível. A sessão aponta para o cadastro daquela pessoa, não para o texto digitado: se a equipe mudar o e-mail depois, a sessão aberta continua sendo a mesma pessoa, e a próxima entrada usa o e-mail novo. Sair encerra a identificação e volta à página inicial. Quem já está identificado e escolhe de novo a porta do morador cai direto no portal. A área do morador recusa quem não está identificado e mostra o pedido de e-mail. Esta sessão é independente da sessão da equipe: entrar como morador não abre o dashboard, e estar logado como funcionário não identifica ninguém no portal.
 - **Entradas e saídas:** Entra o e-mail digitado. Sai a identificação do morador ativo, com nome e torre/apartamento visíveis, ou uma mensagem de erro. Sair remove a identificação.
@@ -287,7 +288,7 @@ Specs:
 - **Fase:** Fase 2 — Pessoas
 - **Objetivo (o quê):** O funcionário cadastra, edita, desativa e reativa moradores, e consulta a lista deles.
 - **Intenção (por quê):** O portal não tem autocadastro. Sem este cadastro, ninguém entra como morador e ninguém abre ocorrência. Desativar tira o acesso de quem saiu do condomínio sem apagar o histórico.
-- **Contexto:** O dashboard autenticado existe desde a Spec 01, com o destino Moradores ainda vazio. Esta spec preenche esse destino. O portal da Spec 02 usa o morador criado aqui.
+- **Contexto:** O dashboard autenticado existe desde a Spec 01, com o destino Moradores ainda vazio. Esta spec preenche esse destino. A lista de pessoas usa o cartão e os campos da seção 15, em linhas (nome, e-mail, torre/apartamento, telefone e situação), com a ação primária de cadastrar. Confirmação de desativar ou reativar abre um diálogo no nível de elevação 3 de `docs/DESIGN.md`. O portal da Spec 02 usa o morador criado aqui.
 - **Atores:** Funcionário ativo e logado.
 - **Descrição do comportamento:** No destino Moradores, a equipe vê a lista em ordem alfabética do nome completo, com e-mail, torre/apartamento, telefone e situação (ativo ou desativado). Pode cadastrar um morador novo com esses quatro dados, sem senha. Pode abrir um morador e alterar qualquer um dos quatro dados. Pode desativar um ativo e reativar um desativado. Desativar e reativar pedem confirmação antes de valer. Desativar não apaga o registro. Não existe ação de excluir. Um morador desativado permanece na lista, marcado como desativado, e deixa de conseguir entrar no portal. Se o e-mail for alterado, a próxima entrada usa o e-mail novo; o antigo deixa de funcionar.
 - **Entradas e saídas:** Entram nome completo, e-mail, torre/apartamento e telefone, além da confirmação de desativar ou reativar. Sai a lista atualizada e o morador disponível, ou não, para a entrada por e-mail. Em erro, o formulário permanece preenchido e indica o problema.
@@ -332,7 +333,7 @@ Specs:
 - **Fase:** Fase 2 — Pessoas
 - **Objetivo (o quê):** O funcionário logado cadastra outros funcionários, desativa e reativa contas, e troca a própria senha.
 - **Intenção (por quê):** Mais de uma pessoa da administração precisa operar o dashboard. Desativar tira o acesso de quem saiu da equipe sem apagar o nome do histórico de status. Trocar a própria senha evita que a senha da implantação fique valendo para sempre, já que não há recuperação por e-mail.
-- **Contexto:** O dashboard da Spec 01 tem o destino Equipe ainda vazio, e o funcionário inicial já existe. O e-mail dos funcionários também entra na regra de unicidade da Spec 03.
+- **Contexto:** O dashboard da Spec 01 tem o destino Equipe ainda vazio, e o funcionário inicial já existe. A lista segue o mesmo padrão visual de Moradores na seção 15: linhas com nome, e-mail e situação, sem senha à vista. O e-mail dos funcionários também entra na regra de unicidade da Spec 03.
 - **Atores:** Funcionário ativo e logado.
 - **Descrição do comportamento:** No destino Equipe, a lista mostra nome, e-mail e situação, em ordem alfabética do nome. A senha nunca aparece. O funcionário logado cadastra outro com nome completo, e-mail e senha. A conta nova nasce ativa e já pode entrar. Não há edição de nome nem de e-mail. Desativar e reativar pedem confirmação. O sistema recusa desativar quando aquele for o único funcionário ativo, inclusive se a pessoa tentar desativar a si mesma sendo a última. O funcionário logado pode substituir a própria senha: informa a senha atual e a nova, duas vezes. Não consegue definir a senha de outra pessoa. O funcionário inicial aparece na lista como os demais e segue as mesmas regras.
 - **Entradas e saídas:** Entram nome, e-mail e senha no cadastro; confirmação na desativação e na reativação; senha atual e senha nova na troca. Sai a lista atualizada, ou uma mensagem de erro sem alterar a conta. A senha nova passa a valer no próximo login. A sessão atual da troca de senha permanece válida.
@@ -380,7 +381,7 @@ Specs:
 - **Fase:** Fase 4 — Ocorrências
 - **Objetivo (o quê):** O morador identificado registra uma ocorrência com título, descrição, categoria, local e, se quiser, uma foto. Ela nasce Aberta e não pode mais ser editada.
 - **Intenção (por quê):** Este é o registro que substitui o pedido solto. A foto ajuda a equipe a entender o problema sem ser obrigatória, porque nem todo relato tem imagem, e nem todo morador consegue tirar a foto na hora.
-- **Contexto:** O morador entra pela Spec 02. As categorias e os status estão fixos nas regras deste PRD. O detalhe que exibe o resultado é a Spec 07. A equipe não possui este formulário.
+- **Contexto:** O morador entra pela Spec 02. As categorias e os status estão fixos nas regras deste PRD. O formulário ocupa um único cartão na página Nova Ocorrência, com o cabeçalho do portal da seção 15: título, descrição, categoria, local, foto opcional, botão primário para registrar e ação secundária para voltar à lista. O detalhe que exibe o resultado é a Spec 07. A equipe não possui este formulário.
 - **Atores:** Morador ativo e identificado.
 - **Descrição do comportamento:** No portal, o morador pede para abrir uma ocorrência e preenche título, descrição, categoria e local. A categoria é uma das seis fixas. O local é texto livre, escrito por quem abre, por exemplo "Piscina", "Garagem G2" ou "Hall da Torre A". A foto é opcional e no máximo uma. Se não houver foto, a ocorrência é criada assim mesmo. Se houver foto, ela só é aceita quando for uma imagem e for guardada com sucesso; se a imagem não puder ser salva, a ocorrência inteira não é criada e os campos permanecem preenchidos para tentar de novo. Ao salvar, o status é Aberto, o autor é o morador da sessão, a data de abertura é o momento do envio, e o sistema abre o detalhe dessa ocorrência. Não há rascunho. Não há como editar nem apagar depois.
 - **Entradas e saídas:** Entram título, descrição, categoria, local e, opcionalmente, uma imagem, sempre da sessão do morador. Sai a ocorrência Aberta, ligada a esse morador, pronta para a lista e para o detalhe. Em falha, nada é criado.
@@ -424,9 +425,9 @@ Specs:
 - **Fase:** Fase 4 — Ocorrências
 - **Objetivo (o quê):** Morador e funcionário veem todas as ocorrências do condomínio, da mais recente para a mais antiga, e reduzem a lista por status e por categoria.
 - **Intenção (por quê):** A lista é o quadro único que o problema pede. O morador acompanha o condomínio inteiro, e a equipe encontra o que ainda precisa de ação sem ler relato por relato.
-- **Contexto:** As ocorrências nascem na Spec 05. O detalhe aberto a partir da lista é a Spec 07. O portal existe na Spec 02 e o dashboard na Spec 01. Esta spec preenche o destino Ocorrências dos dois lados.
+- **Contexto:** As ocorrências nascem na Spec 05. O detalhe aberto a partir da lista é a Spec 07. O portal existe na Spec 02 e o dashboard na Spec 01. Esta spec preenche o destino Ocorrências dos dois lados, no layout da seção 15.
 - **Atores:** Morador ativo identificado. Funcionário ativo logado.
-- **Descrição do comportamento:** Os dois veem a mesma coleção de ocorrências, com os mesmos filtros. A ordem é a data de abertura, da mais recente para a mais antiga. Cada item mostra título, um trecho curto da descrição, categoria, status, local, nome de quem abriu, torre/apartamento, data de abertura e quantidade de comentários. Não mostra telefone, e-mail nem a foto inteira; a foto fica no detalhe. O status usa a identificação visual já definida no projeto para Aberto, Em Análise, Em Execução, Resolvido e Cancelado. Os filtros são status e categoria. Cada um começa em "Todos". Dá para escolher um status, uma categoria, ou um de cada. Os dois filtros valem juntos. Limpar filtros volta a mostrar todas. Clicar num item abre o detalhe daquela ocorrência. No portal, a ação de abrir nova ocorrência permanece visível junto da lista, tenha item ou não. No dashboard, essa ação não existe. Para o funcionário, a lista de ocorrências é a primeira tela do dashboard depois do login.
+- **Descrição do comportamento:** Os dois veem a mesma coleção de ocorrências, com os mesmos filtros, numa coluna só. A ordem é a data de abertura, da mais recente para a mais antiga, indicada como "Mais recentes". No portal, a página traz o miolo Condomínio / Portal do Morador, a linha "Painel do residente" com a torre/apartamento, o título "Ocorrências", uma frase curta de apoio e o botão primário "Nova Ocorrência". No dashboard, o título é "Ocorrências" e esse botão não existe. Abaixo, os filtros: chips Todos, Aberto, Em Análise, Em Execução, Resolvido e Cancelado, cada um com a quantidade já reduzida pelo filtro de categoria; e um select de categoria que começa em "Todas as categorias". Cada item é um card: selo de status, categoria, data, título, trecho da descrição, miniatura da foto quando existir, nome de quem abriu, torre/apartamento, local e a quantidade no formato "N comentários". Se o morador que olha a lista for o autor, o nome aparece com "Você". O card não mostra telefone, e-mail nem a foto inteira. A data aparece como "Hoje às …" ou "Ontem às …" quando for o caso, e nos outros dias como dia, mês e hora. O rodapé informa quantas ocorrências estão visíveis e o total, e troca de página quando passar de 10. Clicar no card abre o detalhe. Para o funcionário, esta lista é a primeira tela do dashboard depois do login. No celular, os filtros empilham e os cards ocupam a largura.
 - **Entradas e saídas:** Entram a sessão (morador ou funcionário) e, se a pessoa filtrar, um status e/ou uma categoria. Sai a lista correspondente, ou o estado vazio. A navegação leva ao detalhe de uma ocorrência.
 - **Dados/entidades envolvidos (conceitual):** Os mesmos dados da ocorrência usados na lista: título, trecho da descrição, categoria, status, local, autor (nome e torre/apartamento), data de abertura, quantidade de comentários. A quantidade é zero enquanto a Spec 08 não tiver comentários; o número mostrado acompanha os comentários existentes.
 - **Estados e transições:** Não se aplica à lista em si. Ela reflete o status atual de cada ocorrência, inclusive Resolvido e Cancelado, que continuam aparecendo.
@@ -455,16 +456,18 @@ Specs:
   - Dado um item da lista, quando é exibido, então mostra título, trecho da descrição, categoria, status, local, nome, torre/apartamento, data de abertura e quantidade de comentários, e não mostra telefone nem e-mail.
   - Dado a lista no dashboard, quando o funcionário procura abrir uma ocorrência nova, então essa ação não existe.
   - Dado um item, quando a pessoa clica, então abre o detalhe daquela ocorrência.
-- **Definição de pronto:** Os dois públicos veem a coleção inteira, filtram por status, por categoria e pelos dois, entendem a lista vazia e o filtro sem resultado, e chegam ao detalhe a partir de um item.
+  - Dado o portal do morador com ocorrências, quando a lista abre, então a página mostra o título "Ocorrências", o botão "Nova Ocorrência", os seis chips de status com quantidades e os cards descritos nesta spec, e não mostra faixa de indicadores, busca, mural nem portaria.
+  - Dado mais de 10 ocorrências, quando a lista abre, então o rodapé mostra o intervalo visível, o total e a troca de página.
+- **Definição de pronto:** Os dois públicos veem a coleção inteira no layout da seção 15, filtram por status, por categoria e pelos dois, entendem a lista vazia e o filtro sem resultado, paginam acima de 10 itens e chegam ao detalhe a partir de um card.
 - **Dependências:** Spec 05, para existir ocorrência. Spec 07, para o clique ter destino. Spec 02 e Spec 01, para as duas áreas autenticadas. A quantidade de comentários fica correta quando a Spec 08 existir; antes disso, zero é o comportamento certo.
-- **Fora do escopo desta spec:** Busca por texto, filtro por torre, ordenar por outro critério, editar pela lista e mudar status pela lista.
+- **Fora do escopo desta spec:** Busca por texto, filtro por local ou por torre, ordenar por outro critério, editar pela lista, mudar status pela lista, indicadores no topo, protocolo, mural e portaria.
 
 ### Spec 07 — Detalhe da ocorrência
 
 - **Fase:** Fase 4 — Ocorrências
 - **Objetivo (o quê):** Morador e funcionário abrem uma ocorrência e leem o registro completo, incluindo a foto e a conversa já existente.
 - **Intenção (por quê):** A lista só apresenta o problema. A decisão da equipe e o comentário do morador dependem de ver o relato inteiro, o local, a imagem e quem pediu.
-- **Contexto:** A ocorrência é criada na Spec 05 e encontrada na Spec 06. Os comentários exibidos aqui são os já publicados; escrever um novo é a Spec 08. Mudar status é a Spec 09. O visual dos status já está definido no projeto.
+- **Contexto:** A ocorrência é criada na Spec 05 e encontrada na Spec 06. Os comentários exibidos aqui são os já publicados; escrever um novo é a Spec 08. Mudar status é a Spec 09. A página usa o cabeçalho da seção 15, com volta à lista, selo de status, título, metadados, descrição, foto em largura do conteúdo quando existir, histórico e conversa abaixo. O visual dos status vem de `docs/DESIGN.md`.
 - **Atores:** Morador ativo identificado. Funcionário ativo logado.
 - **Descrição do comportamento:** O detalhe mostra título, descrição completa, categoria, local, status, data de abertura, nome do autor e torre/apartamento. Se houver foto, ela aparece e pode ser vista por quem chegou ao detalhe. Se não houver, não aparece um espaço vazio de imagem. A conversa mostra os comentários já feitos, do mais antigo para o mais recente, cada um com nome de quem escreveu, se é morador ou equipe, torre/apartamento quando for morador, texto e data. Sem comentários, a área da conversa diz que ainda não há comentário. O morador não vê telefone nem e-mail do autor. O funcionário vê, além do que o morador vê, o telefone e o e-mail do autor, para conseguir falar com quem abriu. Os dois veem uma forma de voltar à lista. Não há editar, apagar, comentar nem mudar status nesta spec: comentar e mudar status entram nas specs seguintes e, até lá, o detalhe é só leitura.
 - **Entradas e saídas:** Entra a identificação da ocorrência, a partir da lista ou de um acesso direto de quem já está identificado. Sai o registro completo, ou a mensagem de não encontrada. Para o funcionário, saem também telefone e e-mail do autor.
@@ -502,7 +505,7 @@ Specs:
 - **Fase:** Fase 4 — Ocorrências
 - **Objetivo (o quê):** Morador identificado e funcionário logado publicam um comentário no detalhe de uma ocorrência que ainda não foi encerrada.
 - **Intenção (por quê):** A ocorrência sozinha não chega para a portaria combinar o conserto nem para um vizinho acrescentar o que viu. O comentário é a conversa embaixo do relato, visível para todo mundo que abre o detalhe.
-- **Contexto:** O detalhe da Spec 07 já mostra a conversa. Esta spec adiciona o campo de escrever. O encerramento que trava o campo é a Spec 09; enquanto o status não for Resolvido nem Cancelado, o campo existe.
+- **Contexto:** O detalhe da Spec 07 já mostra a conversa. Esta spec adiciona o campo de escrever no fim da conversa, com o mesmo campo de texto da seção 15 e o botão primário para publicar. O encerramento que trava o campo é a Spec 09; enquanto o status não for Resolvido nem Cancelado, o campo existe.
 - **Atores:** Morador ativo identificado, tenha sido ele o autor da ocorrência ou não. Funcionário ativo logado.
 - **Descrição do comportamento:** No detalhe de uma ocorrência Aberta, Em Análise ou Em Execução, a pessoa escreve um texto e publica. O comentário entra no fim da conversa, com o nome de quem escreveu, o papel (morador ou equipe), a torre/apartamento se for morador, o texto e a data. O campo fica vazio de novo, pronto para outro comentário. Não há edição nem exclusão. Não há foto no comentário. Em ocorrência Resolvida ou Cancelada, o campo não é oferecido. Se o status encerrar enquanto a pessoa ainda está com o texto digitado, o envio é recusado e o comentário não entra. O autor do comentário permanece o mesmo mesmo que a pessoa seja desativada depois.
 - **Entradas e saídas:** Entram o texto e a sessão de quem escreve, ligados a uma ocorrência existente. Sai o comentário no fim da conversa, visível para morador e equipe no detalhe e contabilizado na lista. Em recusa, a conversa não muda.
@@ -539,7 +542,7 @@ Specs:
 - **Fase:** Fase 4 — Ocorrências
 - **Objetivo (o quê):** O funcionário muda o status de uma ocorrência ainda não encerrada e, ao escolher Resolvido ou Cancelado, encerra de forma definitiva. O detalhe mostra o histórico dessas trocas.
 - **Intenção (por quê):** A lista só é útil se a equipe conseguir marcar o que está em análise, o que está em execução e o que já acabou. O encerramento é irreversível para ninguém reabrir um caso encerrado por engano sem perceber, e o histórico mostra quem fez a última troca.
-- **Contexto:** A ocorrência nasce Aberta na Spec 05. O detalhe é a Spec 07. O comentário da Spec 08 depende deste status para saber se ainda pode ser escrito. O morador vê o status e o histórico, e não vê o controle.
+- **Contexto:** A ocorrência nasce Aberta na Spec 05. O detalhe é a Spec 07. O comentário da Spec 08 depende deste status para saber se ainda pode ser escrito. No dashboard, o controle fica no detalhe, junto do selo de status. A confirmação de Resolvido ou Cancelado usa diálogo no nível de elevação 3 de `docs/DESIGN.md`. O morador vê o status e o histórico, e não vê o controle.
 - **Atores:** Funcionário ativo e logado, que muda o status. Morador identificado, que apenas vê o status e o histórico.
 - **Descrição do comportamento:** No detalhe, dentro do dashboard, enquanto o status for Aberto, Em Análise ou Em Execução, o funcionário vê as outras quatro opções de status. Pode ir de qualquer uma das três para qualquer outra, ou direto para Resolvido ou Cancelado, sem comentar. Troca entre Aberto, Em Análise e Em Execução vale na hora. Escolher Resolvido ou Cancelado pede confirmação avisando que a ocorrência será encerrada, não receberá comentários e não voltará a um status aberto. Se a confirmação for cancelada, o status permanece. Se for aceita, o status muda, o controle some e o campo de comentário também some. Cada troca entra num histórico visível para morador e equipe, com a data, o status novo e o nome do funcionário. A abertura também aparece no histórico como o início, com a data e o nome do morador, status Aberto. O histórico é só leitura, do mais antigo para o mais recente. No portal, o morador vê o status e o histórico e não vê controle. Em ocorrência já encerrada, o controle não é oferecido nos dois lados.
 - **Entradas e saídas:** Entra o status escolhido e, no caso de Resolvido ou Cancelado, a confirmação, sempre de um funcionário logado. Sai o status novo, uma linha no histórico e, se encerrou, a retirada do campo de comentário e do controle. Se a pessoa recusa a confirmação, sai tudo como estava.
@@ -585,3 +588,62 @@ Specs:
 9. Spec 09 — Mudança de status
 
 A Spec 01 vem primeiro porque as outras ações da equipe acontecem dentro do dashboard. Moradores (03) vêm antes da entrada do morador (02), senão não existe e-mail que entre. Funcionários (04) ficam logo depois do login para a unicidade de e-mail já valer quando os moradores forem cadastrados; se a Spec 03 for implementada antes da 04, a checagem contra e-mail de funcionário precisa ser incluída assim que a Spec 04 existir. A ocorrência (05) só faz sentido com morador identificado. O detalhe (07) vem antes da lista (06) para o clique do item já ter destino. Comentários (08) e status (09) fecham o detalhe; a 09 fica por último porque é ela que trava o comentário ao encerrar.
+
+## 15. Referência de interface
+
+A interface deste recorte tem duas fontes, com papéis diferentes:
+
+- **`docs/DESIGN.md` define a linguagem visual.** Cor, tipografia, espaçamento, elevação, raio, botão, campo, selo de status e card de ocorrência saem desse documento. Onde esta seção não repetir um valor, vale o que está lá.
+- **O layout de referência é o painel do morador.** A estrutura que vale é a de uma tela de lista: cabeçalho com a marca e a pessoa logada, título da página com a ação principal, barra de filtros, cards empilhados e paginação. As specs 01, 02, 05, 06 e 07 aplicam essa estrutura nas suas telas.
+
+### O que usar de `docs/DESIGN.md`
+
+- Tipografia Plus Jakarta Sans, nos papéis de título, texto e rótulo já descritos.
+- Canvas claro, cartão branco com borda suave e sombra leve, conteúdo limitado a 1280px no desktop.
+- Botão primário verde para a ação principal da tela. Botão secundário para voltar, cancelar confirmação e ações de apoio. O botão destrutivo fica para desativar pessoa e para a confirmação de cancelar ocorrência.
+- Campos e selects com o foco verde descrito no documento.
+- Selos dos cinco status, em pílula, com o ponto e as cores de Aberto, Em Análise, Em Execução, Resolvido e Cancelado. Cancelado usa o tom neutro do documento, mesmo quando a imagem de referência não mostra esse chip.
+- Card de ocorrência com hierarquia clara: status e categoria na linha de cima, título e trecho no meio, autor, local e quantidade de comentários no rodapé. A miniatura da foto entra à direita quando a ocorrência tem foto.
+- Desktop a partir de 1024px, tablet de 768px a 1023px, celular abaixo de 768px. No celular, filtros empilham ou abrem num painel, e os cards ocupam a largura.
+- Diálogos de confirmação usam a elevação de modal do documento, com o fundo escurecido.
+
+A grade de reserva de área e o passe de visitante descritos no final de `docs/DESIGN.md` não têm tela neste recorte.
+
+### Cabeçalho
+
+As áreas logadas compartilham o mesmo cabeçalho.
+
+- À esquerda, a marca **CondoResolve**, com o complemento **Gestão Condominial**.
+- No centro, os destinos daquela pessoa. No portal: Ocorrências e Nova Ocorrência. No dashboard: Ocorrências, Moradores e Equipe.
+- À direita, quem está logado e **Sair**. O morador vê nome completo e torre/apartamento. O funcionário vê o nome e a indicação de que é da equipe.
+
+### Página inicial e entradas
+
+A página inicial oferece as duas portas no mesmo visual, sem virar uma página de marketing. Cada entrada é um cartão centrado: a do morador pede só o e-mail; a da equipe pede e-mail e senha. O botão de enviar é o primário.
+
+### Lista de ocorrências
+
+É a tela que a imagem de referência organiza, em coluna única.
+
+1. Migalhas: Condomínio / Portal do Morador. No dashboard: Condomínio / Dashboard.
+2. Linha de contexto: "Painel do residente" com a torre/apartamento, ou "Equipe" com o nome do funcionário.
+3. Título **Ocorrências**, uma frase curta de apoio e, só no portal, o botão **Nova Ocorrência**.
+4. Filtros: chips Todos, Aberto, Em Análise, Em Execução, Resolvido e Cancelado, cada um com a quantidade; select de categoria começando em "Todas as categorias"; a ordem visível como "Mais recentes".
+5. Cards empilhados, como descrito na Spec 06. O morador autor vê "Você" junto do nome.
+6. Rodapé com o intervalo visível, o total e a troca de página, quando houver mais de 10 ocorrências.
+
+### Nova ocorrência, detalhe e pessoas
+
+- **Nova Ocorrência** usa o mesmo cabeçalho e um único cartão de formulário.
+- **Detalhe** usa o mesmo cabeçalho, um caminho de volta à lista, o selo de status, o relato, a foto na largura do conteúdo quando existir, o histórico e a conversa. O campo de comentário fica no fim da conversa. O controle de status aparece só no dashboard.
+- **Moradores** e **Equipe** usam o mesmo cabeçalho e uma lista em linhas dentro de um cartão branco, com a ação primária de cadastrar. Não usam o card de ocorrência.
+
+### O que a imagem de referência não traz para este recorte
+
+A imagem também mostra peças de um painel mais largo. Elas não mudam as regras das seções 6 e 7:
+
+- O título da lista é **Ocorrências**, porque o morador vê as ocorrências do condomínio inteiro.
+- Não entram a faixa de números do topo, a busca, o filtro de local, a troca de colunas, o número de protocolo, o mural de avisos, a portaria, o interfone, o WhatsApp nem o texto de acesso por link mágico.
+- A sessão do morador segue a Spec 02: e-mail digitado, até Sair ou até a desativação. Não há prazo de 30 dias nem link enviado por e-mail.
+- Não entram os rótulos "Em trâmite" e "Concluído em 3h". Os status continuam os cinco já definidos.
+- As categorias continuam Manutenção, Limpeza, Barulho, Segurança, Áreas comuns e Outros.
